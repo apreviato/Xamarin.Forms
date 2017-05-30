@@ -1,0 +1,11 @@
+bin
+obj
+*.suo
+/*.suo
+*.user
+
+/fontes/.vs/config
+/fontes/packages/SSH.NET.2013.4.7
+.vs
+*.bak
+
