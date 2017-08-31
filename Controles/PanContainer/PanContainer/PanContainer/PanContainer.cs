@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace PanContainer
 {
-    public class PanContainerView : ContentView
+    public class PanContainerView : StackLayout
     {
         public Boolean IsPanUpdate = false;
         double inicioX, fimX, inicioY, fimY;
@@ -16,6 +16,7 @@ namespace PanContainer
         public event EventHandler Esquerda;
         public event EventHandler Cima;
         public event EventHandler Baixo;
+        public event EventHandler Atualizacao;
 
         public PanContainerView()
         {
@@ -27,6 +28,7 @@ namespace PanContainer
         void OnPanUpdated(object sender, PanUpdatedEventArgs e)
         {
             this.IsPanUpdate = true;
+
             if (e.StatusType == GestureStatus.Started)
                 inicioX = fimX = inicioY = fimY = 0;
             else if (e.StatusType == GestureStatus.Running)
@@ -40,8 +42,11 @@ namespace PanContainer
                     inicioY = e.TotalY;
                 else
                     fimY = e.TotalY;
+
+                if (Atualizacao != null)
+                    Atualizacao(sender, e);
             }
-            else if (e.StatusType == GestureStatus.Completed)
+            else if (e.StatusType == GestureStatus.Completed || e.StatusType == GestureStatus.Canceled)
             {
                 if (inicioX == inicioY)
                 {
@@ -64,12 +69,12 @@ namespace PanContainer
                         if (inicioX < fimX) // Direita
                         {
                             if (Direita != null)
-                                Direita(null, new EventArgs());
+                                Direita(sender, new EventArgs());
                         }
                         else if (inicioX > fimX) // Esquerda
                         {
                             if (Esquerda != null)
-                                Esquerda(null, new EventArgs());
+                                Esquerda(sender, new EventArgs());
                         }
                     }
                     else
@@ -77,17 +82,20 @@ namespace PanContainer
                         if (inicioY < fimY) // Baixo
                         {
                             if (Baixo != null)
-                                Baixo(null, new EventArgs());
+                                Baixo(sender, new EventArgs());
                         }
                         else if (inicioY > fimY) // Cima
                         {
                             if (Cima != null)
-                                Cima(null, new EventArgs());
+                                Cima(sender, new EventArgs());
                         }
                     }
                 }
-
+                
                 inicioX = fimX = inicioY = fimY = 0;
+
+                if (Atualizacao != null)
+                    Atualizacao(sender, new PanUpdatedEventArgs(GestureStatus.Completed, 0, 0, 0));
             }
         }
     }

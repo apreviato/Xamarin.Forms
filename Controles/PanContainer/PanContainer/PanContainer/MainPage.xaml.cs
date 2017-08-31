@@ -14,24 +14,40 @@ namespace PanContainer
             InitializeComponent();
         }
 
-        protected void SwipLeft_Event(object sender, EventArgs e)
+        protected void SwipeLeft_Event(object sender, EventArgs e)
         {
             DisplayAlert("Evento", "Deslizou para a esquerda!", "Ok");
+            MoveContainer((PanContainerView)sender, 0, 0);
         }
 
-        protected void SwipRight_Event(object sender, EventArgs e)
+        protected void SwipeRight_Event(object sender, EventArgs e)
         {
             DisplayAlert("Evento", "Deslizou para a direita!", "Ok");
+            MoveContainer((PanContainerView)sender, 0, 0);
         }
 
-        protected void SwipUp_Event(object sender, EventArgs e)
+        protected void SwipeUp_Event(object sender, EventArgs e)
         {
             DisplayAlert("Evento", "Deslizou para cima!", "Ok");
+            MoveContainer((PanContainerView)sender, 0, 0);
         }
 
-        protected void SwipDown_Event(object sender, EventArgs e)
+        protected void SwipeDown_Event(object sender, EventArgs e)
         {
             DisplayAlert("Evento", "Deslizou para baixo!", "Ok");
+            MoveContainer((PanContainerView)sender, 0, 0);
+        }
+
+        protected void SwipeUpdate_Event(object sender, EventArgs e)
+        {
+            var evento = (PanUpdatedEventArgs)e;
+            MoveContainer((PanContainerView)sender, evento.TotalX, evento.TotalY);
+        }
+
+        private void MoveContainer(PanContainerView container, double x, double y)
+        {
+            container.TranslationX = x;
+            container.TranslationY = y;
         }
     }
 }
